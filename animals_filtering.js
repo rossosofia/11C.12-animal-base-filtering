@@ -3,6 +3,7 @@
 window.addEventListener("DOMContentLoaded", start);
 
 let allAnimals = [];
+let buttonDataFilter = "";
 
 // The prototype for all animals: 
 const Animal = {
@@ -14,42 +15,28 @@ const Animal = {
 
 function start( ) {
     console.log("ready");
-    // TODO: Add event-listeners to filter and sort buttons
     loadJSON();
-    document.querySelectorAll(".filter").forEach((each) =>{each.addEventListener("click", misteriousFunction)});
+    document.querySelectorAll(".filter").forEach((each) =>{each.addEventListener("click", filterInput)});
 }
 
-function misteriousFunction(event){
-    let filter = filterClick(event);
-        displayList(filter);
-}
-
-
-function filterClick(event){
-    if (event.target.dataset.filter === "cat") {
-        // console.log(allAnimals.filter(isCat));
-        return allAnimals.filter(isCat);
-    }  else if (event.target.dataset.filter === "dog") {
-        // console.log(allAnimals.filter(isDog));s
-        return allAnimals.filter(isDog);
-    } else if (event.target.dataset.filter === "*") {
-        return allAnimals;
+//  ------------------- FILTERING ---------------------
+// this method is an iproved one, check the end of the file to see the previous. Now there are 2 funcions instead of 4, and the code is more generic and easily explandable.
+function filterInput(event){
+    let filteredList;
+    buttonDataFilter = event.target.dataset.filter;
+    if (buttonDataFilter === "cat") {
+        filteredList = allAnimals.filter(whichAnimal);
+    }  else if (buttonDataFilter === "dog") {
+        filteredList = allAnimals.filter(whichAnimal);
+    } else if (buttonDataFilter === "*") {
+        filteredList = allAnimals;
     };
+    displayList(filteredList);
 }
 
-function isCat(animal){
-    if (animal.type === "cat") {
+function whichAnimal(animal){
+    if (animal.type === buttonDataFilter){
         return true;
-    } else {
-        return false;
-    }
-}
-
-function isDog(animal){
-    if (animal.type === "dog") {
-        return true;
-    } else {
-        return false;
     }
 }
 
@@ -62,11 +49,7 @@ async function loadJSON() {
 }
 
 function prepareObjects( inputData ) {
-    // console.log(allAnimals);
     allAnimals = inputData.map(preapareObject);
-    // console.log(allAnimals);
-    // TODO: This might not be the function we want to call first
-
     displayList(allAnimals);
 }
 
@@ -106,3 +89,38 @@ function displayAnimal(animal) {
 
 
 
+
+//  ------- PREVIUOUS FILTERING METHOD ------------
+
+// function filterInput(event){
+//     filter = filterClick(event);
+//     displayList(filter);
+// }
+
+// function filterClick(event){
+//     if (event.target.dataset.filter === "cat") {
+//         // console.log(allAnimals.filter(isCat));
+//         return allAnimals.filter(isCat);
+//     }  else if (event.target.dataset.filter === "dog") {
+//         // console.log(allAnimals.filter(isDog));s
+//         return allAnimals.filter(isDog);
+//     } else if (event.target.dataset.filter === "*") {
+//         return allAnimals;
+//     };
+// }
+
+// function isCat(animal){
+//     if (animal.type === "cat") {
+//         return true;
+//     } else {
+//         return false;
+//     }
+// }
+
+// function isDog(animal){
+//     if (animal.type === "dog") {
+//         return true;
+//     } else {
+//         return false;
+//     }
+// }
