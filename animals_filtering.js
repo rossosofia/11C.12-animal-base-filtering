@@ -2,59 +2,87 @@
 
 window.addEventListener("DOMContentLoaded", start);
 
-const allAnimals = [];
+let allAnimals = [];
 
+// The prototype for all animals: 
 const Animal = {
     name: "",
-    type: "unknown",
-    desc: "",
+    desc: "-unknown animal-",
+    type: "",
     age: 0
 };
 
 function start( ) {
     console.log("ready");
-
+    // TODO: Add event-listeners to filter and sort buttons
+    document.querySelectorAll(".filter").forEach((each) =>{each.addEventListener("click", display)});
     loadJSON();
 }
 
-function loadJSON() {
-    fetch("animals.json")
-    .then( response => response.json() )
-    .then( jsonData => {
-        // when loaded, prepare objects
-        prepareObjects( jsonData );
-    });
+// function filterClick(event){
+//     console.log(event.target.dataset.filter);
+//     return event.target.dataset.filter;
+// }
+
+
+function isCat(animal){
+    if (animal.type === "cat") {
+        return true;
+    } else {
+        return false;
+    }
 }
 
-function prepareObjects( jsonData ) {
-    jsonData.forEach( jsonObject => {
-        // TODO: Create new object with cleaned data - and store that in the allAnimals array
-        // read the properties from the jsonObject
-        let text = jsonObject.fullname.split(" ");
-        //create new object from prototype
-        const animal = Object.create(Animal); 
-        // set properties on that object to the variables
-        animal.name = text[0]; 
-        animal.type = text[3];
-        animal.desc = text[2];
-        animal.age = jsonObject.age;
-        // console.log(animal);
-        allAnimals.push(animal); //pushing all the data into a new array and it's somehow working
-        console.log(allAnimals);
-    });
-
-    displayList();
+function isDog(animal){
+    if (animal.type === "dog") {
+        console.log("bau bau");
+        return true;
+    } else {
+        return false;
+    }
 }
 
-function displayList() {
+function display(){
+    console.log("ONLY CATS", allAnimals.filter(isCat));
+    return allAnimals.filter(isCat);
+}
+
+
+//  ------------------- PREPARE OBJECTS FROM DATABASE ---------------------
+async function loadJSON() {
+    const response = await fetch("animals.json");
+    const jsonData = await response.json();
+    // when loaded, prepare data objects
+    prepareObjects( jsonData );
+}
+
+function prepareObjects( inputData ) {
+    allAnimals = inputData.map(preapareObject);
+    // TODO: This might not be the function we want to call first
+
+    displayList(allAnimals);
+}
+
+function preapareObject(jsonObject) {
+    const animal = Object.create(Animal);
+    const texts = jsonObject.fullname.split(" ");
+    animal.name = texts[0];
+    animal.desc = texts[2];
+    animal.type = texts[3];
+    animal.age = jsonObject.age;
+    return animal;
+}
+
+
+// -------------------- DISPLAY --------------------
+function displayList(animals) {
     // clear the list
     document.querySelector("#list tbody").innerHTML = "";
-
     // build a new list
-    allAnimals.forEach( displayAnimal );
+    animals.forEach(displayAnimal);
 }
 
-function displayAnimal( animal ) {
+function displayAnimal(animal) {
     // create clone
     const clone = document.querySelector("template#animal").content.cloneNode(true);
 
@@ -67,6 +95,7 @@ function displayAnimal( animal ) {
     // append clone to list
     document.querySelector("#list tbody").appendChild( clone );
 }
+
 
 
 
