@@ -15,15 +15,27 @@ const Animal = {
 function start( ) {
     console.log("ready");
     // TODO: Add event-listeners to filter and sort buttons
-    document.querySelectorAll(".filter").forEach((each) =>{each.addEventListener("click", display)});
     loadJSON();
+    document.querySelectorAll(".filter").forEach((each) =>{each.addEventListener("click", misteriousFunction)});
 }
 
-// function filterClick(event){
-//     console.log(event.target.dataset.filter);
-//     return event.target.dataset.filter;
-// }
+function misteriousFunction(event){
+    let filter = filterClick(event);
+        displayList(filter);
+}
 
+
+function filterClick(event){
+    if (event.target.dataset.filter === "cat") {
+        // console.log(allAnimals.filter(isCat));
+        return allAnimals.filter(isCat);
+    }  else if (event.target.dataset.filter === "dog") {
+        // console.log(allAnimals.filter(isDog));s
+        return allAnimals.filter(isDog);
+    } else if (event.target.dataset.filter === "*") {
+        return allAnimals;
+    };
+}
 
 function isCat(animal){
     if (animal.type === "cat") {
@@ -35,29 +47,24 @@ function isCat(animal){
 
 function isDog(animal){
     if (animal.type === "dog") {
-        console.log("bau bau");
         return true;
     } else {
         return false;
     }
 }
 
-function display(){
-    console.log("ONLY CATS", allAnimals.filter(isCat));
-    return allAnimals.filter(isCat);
-}
-
-
 //  ------------------- PREPARE OBJECTS FROM DATABASE ---------------------
 async function loadJSON() {
     const response = await fetch("animals.json");
     const jsonData = await response.json();
     // when loaded, prepare data objects
-    prepareObjects( jsonData );
+    prepareObjects(jsonData);
 }
 
 function prepareObjects( inputData ) {
+    // console.log(allAnimals);
     allAnimals = inputData.map(preapareObject);
+    // console.log(allAnimals);
     // TODO: This might not be the function we want to call first
 
     displayList(allAnimals);
