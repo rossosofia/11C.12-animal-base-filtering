@@ -90,6 +90,9 @@ function displayAnimal(animal) {
 
 
 
+
+
+
 //  ------- PREVIUOUS FILTERING METHOD ------------
 
 // function filterInput(event){
