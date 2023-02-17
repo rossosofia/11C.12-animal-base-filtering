@@ -3,7 +3,9 @@
 window.addEventListener("DOMContentLoaded", start);
 
 let allAnimals = [];
-let buttonDataFilter = "";
+// we don't want too many floating variables, we want to store it inside an object
+// let buttonDataFilter = "";
+let buttonDataFilter = {filter: "*"};
 
 // The prototype for all animals: 
 const Animal = {
@@ -16,6 +18,10 @@ const Animal = {
 function start( ) {
     console.log("ready");
     loadJSON();
+    triggerButtons();
+}
+
+function triggerButtons(){
     document.querySelectorAll(".filter").forEach((each) =>{each.addEventListener("click", filterInput)});
 }
 
@@ -24,13 +30,20 @@ function start( ) {
 function filterInput(event){
     let filteredList;
     buttonDataFilter = event.target.dataset.filter;
-    if (buttonDataFilter === "cat") {
+    if (buttonDataFilter !== "*") {
         filteredList = allAnimals.filter(whichAnimal);
-    }  else if (buttonDataFilter === "dog") {
-        filteredList = allAnimals.filter(whichAnimal);
-    } else if (buttonDataFilter === "*") {
+    } else {
         filteredList = allAnimals;
-    };
+    }
+    // if (buttonDataFilter === "cat") {
+    //     filteredList = allAnimals.filter(whichAnimal);
+    // }  else if (buttonDataFilter === "dog") {
+    //     filteredList = allAnimals.filter(whichAnimal);
+    // } else if (buttonDataFilter === "horse") {
+    //     filteredList = allAnimals.filter(whichAnimal);}
+    // else {
+    //     filteredList = allAnimals;
+    // };
     displayList(filteredList);
 }
 
@@ -49,6 +62,7 @@ async function loadJSON() {
 }
 
 function prepareObjects( inputData ) {
+    // if you want to change map you need to use iterator+forEach
     allAnimals = inputData.map(preapareObject);
     displayList(allAnimals);
 }
