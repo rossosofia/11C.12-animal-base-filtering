@@ -24,11 +24,9 @@ function start( ) {
 
 function triggerButtons(){
     document.querySelectorAll(".filter").forEach((each) =>{each.addEventListener("click", filterInput)});
+    document.querySelectorAll("[data-action=sort]").forEach((each) =>{each.addEventListener("click", selectSort)});
 }
 
-// function triggerSorting(){
-//     document.querySelectorAll("[data-action=sort]").forEach((each) =>{each.addEventListener("click",)});
-// }
 
 // --- Filtering ----
 function filterInput(event){
@@ -48,6 +46,12 @@ function filterInput(event){
 }
 
 // ---- Sorting ----
+function selectSort(event){
+    const sortBy = event.target.dataset.sort;
+    console.log(`user selectored ${sortBy}`);
+    sortList(sortBy);
+}
+
 function sortList(sortBy){
     let sortedList = allAnimals;
     if ( sortBy === "name"){
