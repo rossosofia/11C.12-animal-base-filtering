@@ -14,6 +14,12 @@ const Animal = {
     star: false,
 };
 
+const settings = {
+    filterBy: "all",
+    sortBy: "name",
+    sortDir: "asc"
+}
+
 function start( ) {
     console.log("ready");
     loadJSON();
@@ -24,61 +30,89 @@ function start( ) {
 
 function triggerButtons(){
     document.querySelectorAll(".filter").forEach((each) =>{each.addEventListener("click", selectFilter)});
-    document.querySelectorAll("[data-action=sort]").forEach((each) =>{each.addEventListener("click", selectSort)});
+    
+    document.querySelectorAll("[data-action=sort]").forEach((each) =>{each.addEventListener("click", sortClick)});
 }
 
 
-// --- Filtering ----
+// // --- Filtering ----
 function selectFilter(event){
-    let filteredList;
-    if (event.target.dataset.filter !== "*") {
-        filteredList = allAnimals.filter(function whichAnimal(animal){
-            if (animal.type === event.target.dataset.filter){
+    const filter = event.target.dataset.filter;
+   //filterList(filter);
+   setFilter(filter);
+}
+
+function setFilter(filter){
+    settings.filterBy = filter;
+    buildList();
+}
+
+function filterList(filteredList){
+    if (settings.filterBy !== "*") {
+        filteredList = allAnimals.filter(function whichAnimal(animal){ //its a differnet way with closure
+            if (animal.type === settings.filterBy ){
                 return true;
-            } else {
+            }else{
                 return false;
             }
-        });
-    } else {
+        })
+    }
+    else {
         filteredList = allAnimals;
     }
-    displayList(filteredList);
+    return filteredList;
+   
 }
+  
+// ---------------------SORTING---------------------------
 
-// ---- Sorting ----
-function selectSort(event){
+function sortClick(event){
+
     const sortBy = event.target.dataset.sort;
     const sortDir = event.target.dataset.sortDirection;
 
-    // toggle the direction
-    if (sortDir === "asc"){
+    //toggle the direction
+    if(sortDir === "asc"){
         event.target.dataset.sortDirection = "desc";
-    } else {
+    }else{
         event.target.dataset.sortDirection = "asc";
     }
-    console.log(`user selected ${sortBy} - ${sortDir}`);
-    sortList(sortBy, sortDir);
+    console.log(`user selected ${sortBy} - ${sortDir}`)
+    setSort(sortBy, sortDir);
 }
 
-function sortList(sortBy, sortDir){
-    let sortedList = allAnimals;
-    let direction = 1;
-    if (sortDir === "desc"){
-        direction = -1;
-    } else {
-        direction = 1;
-    }
+function setSort(sortBy, sortDir){
+    settings.sortBy = sortBy;
+    settings.sortDir = sortDir;
+    buildList();
+}
+
+
+
+function sortList(sortedList){
     
-    sortedList = sortedList.sort(sortByProperty);
-    function sortByProperty(animalA, animalB) {
-        if (animalA[sortBy] < animalB[sortBy]) {
-            return -1;
-        } else {
-            return 1;
+     let direction = 1;
+     if(settings.sortDir === "desc"){
+        direction = -1;
+     } else {
+        direction = 1;
+     }
+    
+     sortedList = sortedList.sort(sortByInput);
+     
+      function sortByInput(animalA, animalB){
+        console.log(`sorted by ${settings.sortBy}`)
+        if(animalA[settings.sortBy]   < animalB[settings.sortBy]){
+            return -1 * direction;
+        }else{
+            return 1 * direction;
         }
     }
-    displayList(sortedList);
+     return sortedList;
+    
+    
 }
+
 
 //  ------------------- MODEL ---------------------
 async function loadJSON() {
@@ -105,9 +139,10 @@ function preapareObject(jsonObject) {
 
 // -------------------- VIEW --------------------
 function buildList() {
-    const currentList = allAnimals;
-    // FUTURE: Filter and sort currentList before displaying
-    displayList(currentList);
+    const currentList = filterList(allAnimals);
+    let sortedList = sortList(currentList);
+
+    displayList(sortedList);
 }
 
 function displayList(animals) {
@@ -140,6 +175,3 @@ function displayAnimal(animal) {
     // append clone to list
     document.querySelector("#list tbody").appendChild( clone );
 }
-
-
-
