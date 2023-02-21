@@ -3,16 +3,15 @@
 window.addEventListener("DOMContentLoaded", start);
 
 let allAnimals = [];
-// we don't want too many floating variables, we want to store it inside an object
-// let buttonDataFilter = "";
-let buttonDataFilter = {filter: "*"};
+// const sortedList = allAnimals.sort(compareByName);
 
 // The prototype for all animals: 
 const Animal = {
     name: "",
     desc: "-unknown animal-",
     type: "",
-    age: 0
+    age: 0,
+    star: false,
 };
 
 function start( ) {
@@ -21,39 +20,64 @@ function start( ) {
     triggerButtons();
 }
 
+// ---------------------- CONTROLLER -----------------
+
 function triggerButtons(){
     document.querySelectorAll(".filter").forEach((each) =>{each.addEventListener("click", filterInput)});
 }
 
-//  ------------------- FILTERING ---------------------
-// this method is an iproved one, check the end of the file to see the previous. Now there are 2 funcions instead of 4, and the code is more generic and easily explandable.
+// function triggerSorting(){
+//     document.querySelectorAll("[data-action=sort]").forEach((each) =>{each.addEventListener("click",)});
+// }
+
+// --- Filtering ----
 function filterInput(event){
     let filteredList;
-    buttonDataFilter = event.target.dataset.filter;
-    if (buttonDataFilter !== "*") {
-        filteredList = allAnimals.filter(whichAnimal);
+    if (event.target.dataset.filter !== "*") {
+        filteredList = allAnimals.filter(function whichAnimal(animal){
+            if (animal.type === event.target.dataset.filter){
+                return true;
+            } else {
+                return false;
+            }
+        });
     } else {
         filteredList = allAnimals;
     }
-    // if (buttonDataFilter === "cat") {
-    //     filteredList = allAnimals.filter(whichAnimal);
-    // }  else if (buttonDataFilter === "dog") {
-    //     filteredList = allAnimals.filter(whichAnimal);
-    // } else if (buttonDataFilter === "horse") {
-    //     filteredList = allAnimals.filter(whichAnimal);}
-    // else {
-    //     filteredList = allAnimals;
-    // };
     displayList(filteredList);
 }
 
-function whichAnimal(animal){
-    if (animal.type === buttonDataFilter){
-        return true;
+// ---- Sorting ----
+function sortList(sortBy){
+    let sortedList = allAnimals;
+    if ( sortBy === "name"){
+        sortedList = sortedList.sort(sortByName);
+    } else if(sortBy === "type"){
+        sortedList = sortedList.sort(sortByType);
+    }
+    displayList(sortedList);
+}
+
+function sortByName(animalA, animalB) {
+    if (animalA.name < animalB.name) {
+        return -1;
+    } else if (animalA.name > animalB.name) {
+        return 1;
+    } else {
+        return 0;
     }
 }
 
-//  ------------------- PREPARE OBJECTS FROM DATABASE ---------------------
+function sortByType(animalA, animalB) {
+    if (animalA.type < animalB.type) {
+        return -1;
+    } else if (animalA.type > animalB.type) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+//  ------------------- MODEL ---------------------
 async function loadJSON() {
     const response = await fetch("animals.json");
     const jsonData = await response.json();
@@ -62,7 +86,6 @@ async function loadJSON() {
 }
 
 function prepareObjects( inputData ) {
-    // if you want to change map you need to use iterator+forEach
     allAnimals = inputData.map(preapareObject);
     displayList(allAnimals);
 }
@@ -77,8 +100,13 @@ function preapareObject(jsonObject) {
     return animal;
 }
 
+// -------------------- VIEW --------------------
+function buildList() {
+    const currentList = allAnimals;
+    // FUTURE: Filter and sort currentList before displaying
+    displayList(currentList);
+}
 
-// -------------------- DISPLAY --------------------
 function displayList(animals) {
     // clear the list
     document.querySelector("#list tbody").innerHTML = "";
@@ -89,55 +117,26 @@ function displayList(animals) {
 function displayAnimal(animal) {
     // create clone
     const clone = document.querySelector("template#animal").content.cloneNode(true);
-
+    if(animal.star){
+        clone.querySelector("[data-field=star]").textContent = "⭐";
+    } else {
+        clone.querySelector("[data-field=star]").textContent = "☆";
+    }
     // set clone data
     clone.querySelector("[data-field=name]").textContent = animal.name;
     clone.querySelector("[data-field=desc]").textContent = animal.desc;
     clone.querySelector("[data-field=type]").textContent = animal.type;
     clone.querySelector("[data-field=age]").textContent = animal.age;
-
+    clone.querySelector("[data-field=star]").addEventListener(
+        `click`, clickStar);
+    // change star status
+    function clickStar(){
+        animal.star = !animal.star;
+        buildList();
+    };
     // append clone to list
     document.querySelector("#list tbody").appendChild( clone );
 }
 
 
 
-
-
-
-
-
-//  ------- PREVIUOUS FILTERING METHOD ------------
-
-// function filterInput(event){
-//     filter = filterClick(event);
-//     displayList(filter);
-// }
-
-// function filterClick(event){
-//     if (event.target.dataset.filter === "cat") {
-//         // console.log(allAnimals.filter(isCat));
-//         return allAnimals.filter(isCat);
-//     }  else if (event.target.dataset.filter === "dog") {
-//         // console.log(allAnimals.filter(isDog));s
-//         return allAnimals.filter(isDog);
-//     } else if (event.target.dataset.filter === "*") {
-//         return allAnimals;
-//     };
-// }
-
-// function isCat(animal){
-//     if (animal.type === "cat") {
-//         return true;
-//     } else {
-//         return false;
-//     }
-// }
-
-// function isDog(animal){
-//     if (animal.type === "dog") {
-//         return true;
-//     } else {
-//         return false;
-//     }
-// }

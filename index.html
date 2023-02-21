@@ -17,12 +17,6 @@
       <button class="filter" data-action="filter" data-filter="dog">
         Only Dogs
       </button>
-      <button class="filter" data-action="filter" data-filter="horse">
-        Only Horses
-      </button>
-      <button class="filter" data-action="filter" data-filter="dragon">
-        Only Dragons
-      </button>
       <button class="filter" data-action="filter" data-filter="*">all</button>
     </p>
 
@@ -31,6 +25,9 @@
     <table id="list">
       <thead>
         <tr id="sorting">
+          <th data-action="sort" data-sort-direction="asc" data-sort="star">
+            ⭐
+          </th>
           <th data-action="sort" data-sort-direction="asc" data-sort="name">
             Name
           </th>
@@ -52,6 +49,7 @@
 
     <template id="animal">
       <tr>
+        <td data-field="star">⭐</td>
         <td data-field="name">NAME</td>
         <td data-field="type">TYPE</td>
         <td data-field="desc">DESCRIPTION</td>
