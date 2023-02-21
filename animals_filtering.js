@@ -67,9 +67,14 @@ function filterList(filteredList){
 // ---------------------SORTING---------------------------
 
 function sortClick(event){
-
     const sortBy = event.target.dataset.sort;
     const sortDir = event.target.dataset.sortDirection;
+    // find "old" sortby element, end remove .sortby
+    const oldElement = document.querySelector(`[data-sort=${settings.sortBy}]`);
+    oldElement.classList.remove("sortby");
+
+    // indicate active sort
+    event.target.classList.add("sorby");
 
     //toggle the direction
     if(sortDir === "asc"){
