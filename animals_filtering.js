@@ -23,13 +23,13 @@ function start( ) {
 // ---------------------- CONTROLLER -----------------
 
 function triggerButtons(){
-    document.querySelectorAll(".filter").forEach((each) =>{each.addEventListener("click", filterInput)});
+    document.querySelectorAll(".filter").forEach((each) =>{each.addEventListener("click", selectFilter)});
     document.querySelectorAll("[data-action=sort]").forEach((each) =>{each.addEventListener("click", selectSort)});
 }
 
 
 // --- Filtering ----
-function filterInput(event){
+function selectFilter(event){
     let filteredList;
     if (event.target.dataset.filter !== "*") {
         filteredList = allAnimals.filter(function whichAnimal(animal){
@@ -48,39 +48,24 @@ function filterInput(event){
 // ---- Sorting ----
 function selectSort(event){
     const sortBy = event.target.dataset.sort;
-    console.log(`user selectored ${sortBy}`);
+    console.log(`user selected ${sortBy}`);
     sortList(sortBy);
 }
 
 function sortList(sortBy){
     let sortedList = allAnimals;
-    if ( sortBy === "name"){
-        sortedList = sortedList.sort(sortByName);
-    } else if(sortBy === "type"){
-        sortedList = sortedList.sort(sortByType);
+    sortedList = sortedList.sort(sortByProperty);
+    function sortByProperty(animalA, animalB) {
+        console.log(`Sort by ${sortBy}`);
+        if (animalA[sortBy] < animalB[sortBy]) {
+            return -1;
+        } else {
+            return 1;
+        }
     }
     displayList(sortedList);
 }
 
-function sortByName(animalA, animalB) {
-    if (animalA.name < animalB.name) {
-        return -1;
-    } else if (animalA.name > animalB.name) {
-        return 1;
-    } else {
-        return 0;
-    }
-}
-
-function sortByType(animalA, animalB) {
-    if (animalA.type < animalB.type) {
-        return -1;
-    } else if (animalA.type > animalB.type) {
-        return 1;
-    } else {
-        return 0;
-    }
-}
 //  ------------------- MODEL ---------------------
 async function loadJSON() {
     const response = await fetch("animals.json");
