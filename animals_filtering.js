@@ -184,13 +184,68 @@ function displayAnimal(animal) {
     clone.querySelector("[data-field=winner]").dataset.winner = animal.winner;
     clone.querySelector("[data-field=winner]").addEventListener(`click`, clickWinner);
     function clickWinner(){
+        // untoggle an animal is always possible, but not toggle it (2 winners for each category)
         if(animal.winner === true){
             animal.winner = false;
         } else {
-            animal.winner = true;
+            tryToMakeAWinner(animal);
         }
         buildList();
     }
     // append clone to list
     document.querySelector("#list tbody").appendChild( clone );
+}
+
+function tryToMakeAWinner(selectedAnimal){
+    const winners = allAnimals.filter(animal => animal.winner)
+    const numberOfWinners = winners.length;
+    const other = winners.filter(animal => animal.type === selectedAnimal.type ).shift();
+    // if there is another of the same type
+    if (other !== undefined){
+        console.log("there can only be one winner of each type!");
+        removeOther(other);
+    } else if (numberOfWinners >= 2){
+        console.log("there can only be two winners");
+        removeAorB(winners[0], winners[1]);
+    } else {
+        makeWinner(selectedAnimal);
+    }
+
+
+    makeWinner(selectedAnimal);
+
+
+    function removeOther(other){
+        // ask the user to ignore or remove 'other'
+
+        // if the user ignor - do nothing
+
+        // if remove other:
+        removeWinner(other);
+        makeWinner(selectedAnimal);
+        
+    }
+    
+    function removeAorB(winnerA, winnerB){
+        // ask the user to ignore or remove 'A or B
+
+        // if ignore, do nothing
+        // if removeA
+        removeWinner(winnerA);
+        makeWinner(selectedAnimal);
+
+        // else - if removeB
+        removeWinner(winnerB);
+        makeWinner(selectedAnimal);
+    }
+    
+    function removeWinner(winnerAnimal){
+        winnerAnimal.winner = false;
+    }
+    
+    function makeWinner(animal){
+        animal.winner = true;
+    }
+
+
 }
