@@ -85,7 +85,7 @@ function sortClick(event){
     }else{
         event.target.dataset.sortDirection = "asc";
     }
-    console.log(`user selected ${sortBy} - ${sortDir}`)
+    // console.log(`user selected ${sortBy} - ${sortDir}`)
     setSort(sortBy, sortDir);
 }
 
@@ -109,7 +109,7 @@ function sortList(sortedList){
      sortedList = sortedList.sort(sortByInput);
      
       function sortByInput(animalA, animalB){
-        console.log(`sorted by ${settings.sortBy}`)
+        // console.log(`sorted by ${settings.sortBy}`)
         if(animalA[settings.sortBy]   < animalB[settings.sortBy]){
             return -1 * direction;
         }else{
@@ -180,6 +180,17 @@ function displayAnimal(animal) {
         animal.star = !animal.star;
         buildList();
     };
+    // change winner status (same logic as star)
+    clone.querySelector("[data-field=winner]").dataset.winner = animal.winner;
+    clone.querySelector("[data-field=winner]").addEventListener(`click`, clickWinner);
+    function clickWinner(){
+        if(animal.winner === true){
+            animal.winner = false;
+        } else {
+            animal.winner = true;
+        }
+        buildList();
+    }
     // append clone to list
     document.querySelector("#list tbody").appendChild( clone );
 }

@@ -46,9 +46,11 @@
 /* ****** TROPHY ****** */
 td[data-field="winner"]::after {
   content: "🏆";
+  cursor: pointer;
 }
 
 td[data-field="winner"][data-winner="false"]::after {
   content: "🏆";
+  cursor: pointer;
   filter: grayscale(1);
 }
