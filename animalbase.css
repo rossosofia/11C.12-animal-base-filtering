@@ -94,3 +94,7 @@ button.closebutton {
   font-size: medium;
   font-weight: lighter;
 }
+
+.hide{
+  display: none;
+}
