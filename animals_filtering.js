@@ -15,7 +15,7 @@ const Animal = {
 };
 
 const settings = {
-    filterBy: "all",
+    filterBy: "*",
     sortBy: "name",
     sortDir: "asc"
 }
@@ -131,7 +131,7 @@ async function loadJSON() {
 
 function prepareObjects( inputData ) {
     allAnimals = inputData.map(preapareObject);
-    displayList(allAnimals);
+    buildList();
 }
 
 function preapareObject(jsonObject) {
