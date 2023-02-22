@@ -12,6 +12,7 @@ const Animal = {
     type: "",
     age: 0,
     star: false,
+    winner: false
 };
 
 const settings = {

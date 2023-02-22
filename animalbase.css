@@ -42,3 +42,13 @@
   cursor: pointer;
   min-width: 2em;
 }
+
+/* ****** TROPHY ****** */
+td[data-field="winner"]::after {
+  content: "🏆";
+}
+
+td[data-field="winner"][data-winner="false"]::after {
+  content: "🏆";
+  filter: grayscale(1);
+}
